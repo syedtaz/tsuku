@@ -25,3 +25,11 @@ func Filter[T any](a []T, f func(T) bool) []T {
 
 	return results
 }
+
+func First[T any](a []T) T {
+	if len(a) == 0 {
+		panic("List is empty")
+	}
+
+	return a[0]
+}
