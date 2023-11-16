@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/syedtaz/tsuku/cmd/switches"
 )
 
 var rootCmd = &cobra.Command{
@@ -12,6 +13,10 @@ var rootCmd = &cobra.Command{
 	Short: "package manager for the Koka programming language.",
 	Long:  "tsuku is an experimental package manager for the Koka programming language.",
 	Run:   func(cmd *cobra.Command, args []string) {},
+}
+
+func init() {
+	rootCmd.AddCommand(switches.SwitchCmd)
 }
 
 func Execute() {
