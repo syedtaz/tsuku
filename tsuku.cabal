@@ -16,13 +16,14 @@ executable tsuku
     import:           warnings
     main-is:          Main.hs
     build-depends:    
-        base ^>= 4.17.2.0,
-        wreq ^>= 0.5.4.2,
-        lens ^>= 5.2.3,
-        text ^>= 2.0.2,
-        bytestring ^>= 0.11.5.2,
-        lens-aeson ^>= 1.2.3,
-        http-types ^>= 0.12.3
+        base        ^>= 4.17.2.0,
+        wreq        ^>= 0.5.4.2,
+        lens        ^>= 5.2.3,
+        text        ^>= 2.0.2,
+        bytestring  ^>= 0.11.5.2,
+        lens-aeson  ^>= 1.2.3,
+        http-types  ^>= 0.12.3,
+        time        ^>=1.12.2
 
     other-modules: Switch
     hs-source-dirs:   app
