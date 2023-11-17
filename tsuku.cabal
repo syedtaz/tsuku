@@ -24,5 +24,6 @@ executable tsuku
         lens-aeson ^>= 1.2.3,
         http-types ^>= 0.12.3
 
+    other-modules: Switch
     hs-source-dirs:   app
     default-language: GHC2021
