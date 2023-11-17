@@ -1,29 +1,29 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Switch where
+module Switch (getReleases) where
 
-  import Network.Wreq ( getWith, defaults, header, responseBody, responseStatus)
+  import qualified Network.Wreq as Wreq
   import Control.Lens ( (&), (^.), (.~), (^..))
-  import Data.Aeson.Lens (key, _String, values)
-  import qualified Data.ByteString as BS
-  import Network.HTTP.Types ( Status(Status, statusCode) )
-  import Data.Text (Text)
+  import qualified Data.Aeson.Lens as Aeson.Lens
+  import qualified Data.ByteString as ByteString
+  import qualified Network.HTTP.Types as HTTP.Types
+  import qualified Data.Text as T
   
-  githubApiVersion :: BS.ByteString
+  githubApiVersion :: ByteString.ByteString
   githubApiVersion = "2022-11-28"
 
   kokaReleasePrefix :: String
   kokaReleasePrefix = "https://api.github.com/repos/koka-lang/koka/releases"  
 
-  getReleases :: IO (Maybe[(Text, Text)])
+  getReleases :: IO (Maybe[(T.Text, T.Text)])
   getReleases =
     do
-      resp <- getWith opts kokaReleasePrefix
-      case resp ^. responseStatus of
-        Status { statusCode = 200 } ->
-          let view f = resp ^. responseBody ^.. values . f . _String 
-              tags = view $ key "tag_name"
-              vers = view $ key "published_at"
+      resp <- Wreq.getWith opts kokaReleasePrefix
+      case resp ^. Wreq.responseStatus of
+        HTTP.Types.Status { HTTP.Types.statusCode = 200 } ->
+          let view f = resp ^. Wreq.responseBody ^.. Aeson.Lens.values . f . Aeson.Lens._String 
+              tags = view $ Aeson.Lens.key "tag_name"
+              vers = view $ Aeson.Lens.key "published_at"
           in return $ Just $ zip tags vers
-        Status _ _ -> return Nothing
-    where opts = defaults & header "Accept" .~ ["application/vnd.github+json"] & header "X-GitHub-Api-Version" .~ [githubApiVersion]
+        HTTP.Types.Status _ _ -> return Nothing
+    where opts = Wreq.defaults & Wreq.header "Accept" .~ ["application/vnd.github+json"] & Wreq.header "X-GitHub-Api-Version" .~ [githubApiVersion]
