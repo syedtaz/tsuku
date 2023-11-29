@@ -15,7 +15,7 @@ common warnings
 executable tsuku
     import:           warnings
     main-is:          Main.hs
-    build-depends:    
+    build-depends:
         base        ^>= 4.17.2.0,
         wreq        ^>= 0.5.4.2,
         lens        ^>= 5.2.3,
@@ -24,9 +24,10 @@ executable tsuku
         lens-aeson  ^>= 1.2.3,
         http-types  ^>= 0.12.3,
         time        ^>= 1.12.2,
-        aeson       ^>= 2.2.1.0
+        aeson       ^>= 2.2.1.0,
+        old-locale  ^>= 1.0.0.7
 
     other-modules:      Switch, Cli
     hs-source-dirs:     app, app/switch, app/cli
-    -- exposed-modules:    
+    -- exposed-modules:
     default-language:   GHC2021

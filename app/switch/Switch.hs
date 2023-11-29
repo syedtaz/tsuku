@@ -7,7 +7,16 @@ module Switch (getRelease, getReleases) where
   import qualified Data.Aeson.Lens as Aeson.Lens
   import qualified Network.HTTP.Types as HTTP.Types
   import qualified Data.Text as T
-  
+  import qualified Data.Time as Time
+  import qualified Data.Time.Format as Time.Format
+  -- Constants
+
+  releasesUrl :: String
+  releasesUrl = "https://api.github.com/repos/koka-lang/koka/releases"
+
+  tagsUrl :: T.Text
+  tagsUrl = "https://api.github.com/repos/koka-lang/koka/releases/tags/"
+
   defaultOpts :: Wreq.Options
   defaultOpts = Wreq.defaults & acceptHeader & versionHeader
     where acceptHeader  = Wreq.header "Accept" .~ ["application/vnd.github+json"]
@@ -16,27 +25,35 @@ module Switch (getRelease, getReleases) where
 
   -- Functions for listing all releases.
 
+  mapVersToTime :: [(T.Text, T.Text)] -> [(T.Text, T.Text)]
+  mapVersToTime = map f
+    where
+      f (x, y) = (x, parseTime y)
+      parseTime input = orThen $ parse input
+      parse x = Time.Format.parseTimeM True Time.Format.defaultTimeLocale "%FT%T%QZ" (T.unpack x) :: Maybe Time.UTCTime
+      orThen = maybe "" (T.pack . Time.Format.formatTime Time.Format.defaultTimeLocale "%Y-%m-%d")
+
   mapTagVers :: Aeson.Lens.AsValue s => Wreq.Response s -> [(T.Text, T.Text)]
   mapTagVers resp = zip tags vers
     where tags    = view $ Aeson.Lens.key "tag_name"
           vers    = view $ Aeson.Lens.key "published_at"
-          view f  = resp ^. Wreq.responseBody ^.. Aeson.Lens.values . f . Aeson.Lens._String 
-    
-  getReleases :: IO (Maybe[(T.Text, T.Text)])
+          view f  = resp ^. Wreq.responseBody ^.. Aeson.Lens.values . f . Aeson.Lens._String
+
+  getReleases :: IO (Maybe [(T.Text, T.Text)])
   getReleases = do
-    resp <- Wreq.getWith defaultOpts "https://api.github.com/repos/koka-lang/koka/releases"
+    resp <- Wreq.getWith defaultOpts releasesUrl
     case resp ^. Wreq.responseStatus of
-      HTTP.Types.Status { HTTP.Types.statusCode = 200 } -> return $ Just $ mapTagVers resp
+      HTTP.Types.Status { HTTP.Types.statusCode = 200 } -> return $ Just $ mapVersToTime $ mapTagVers resp
       HTTP.Types.Status _ _ -> return Nothing
 
   -- Functions getting a specific release.
 
   -- TODO! Fix
   getRelease :: T.Text -> IO (Maybe [T.Text])
-  getRelease tag = do
+  getRelease tag =
+    let apiUrl = T.unpack $ tagsUrl <> tag in
+    do
       resp <- Wreq.getWith defaultOpts apiUrl
       case resp ^. Wreq.responseStatus of
         -- HTTP.Types.Status { HTTP.Types.statusCode = 200 } -> return $ Just $ extractTag resp
         HTTP.Types.Status _ _ -> return Nothing
-    where
-      apiUrl = T.unpack $ "https://api.github.com/repos/koka-lang/koka/releases/tags/" <> tag
