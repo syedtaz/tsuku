@@ -1,6 +1,8 @@
+-- {-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
-  import Switch ( getReleases )
+  import Switch
   
   main :: IO ()
   main = do
