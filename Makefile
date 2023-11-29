@@ -1,8 +1,6 @@
-build: clean
-	@go install .
+build: 
+	@cabal build
 
-remove:
-	@rm -f ${HOME}/go/bin/tsuku
+run: build
+	@cabal run
 
-clean:
-	@go clean
