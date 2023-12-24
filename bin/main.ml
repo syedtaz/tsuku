@@ -1,1 +1,1 @@
-let () = print_endline "Hello, World!"
+let () = Command_unix.run ~version:"0.1" Tsuku.Command.command

@@ -1,4 +1,4 @@
 (executable
  (public_name tsuku)
  (name main)
- (libraries tsuku))
+ (libraries tsuku core core_unix.command_unix))

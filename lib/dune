@@ -1,2 +1,5 @@
 (library
- (name tsuku))
+ (name tsuku)
+ (libraries core async)
+ (preprocess
+  (pps ppx_jane ppx_let)))
