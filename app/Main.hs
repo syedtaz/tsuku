@@ -1,8 +1,10 @@
 module Main where
 
-import qualified MyLib (someFunc)
+import qualified Config (readConfig)
 
 main :: IO ()
 main = do
-  putStrLn "Hello, Haskell!"
-  MyLib.someFunc
+  res <- Config.readConfig ()
+  case res of
+    Just v -> print v
+    Nothing -> putStrLn "No Tsukufile in current directory."
