@@ -1,9 +1,5 @@
-<div align="center">
-  <img src="./icon.png" alt="Tsuku logo."/>
-  <br/>
-  Tsuku
-</div>
+<a href="https://www.flaticon.com/free-stickers/professions-and-jobs">
+  <img src="./icon.png" alt="Tsuku logo." align="right" />
+</a>
 
 Experimental Package manager
-
-<a href="https://www.flaticon.com/free-icons/gift" title="gift icons">Icons by Freepik - Flaticon</a>
