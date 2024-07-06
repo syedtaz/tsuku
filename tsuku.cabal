@@ -17,7 +17,7 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  Config, Cli
+    exposed-modules:  Config, Cli, Manifest
     -- other-modules:
     other-extensions: OverloadedStrings
     build-depends:    base ^>=4.17.2.0,
