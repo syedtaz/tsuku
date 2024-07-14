@@ -59,3 +59,23 @@ getRoot = do
     home <- getHomeDirectory
     return (home ++ "/.tsuku")
   create (Just loc) = return loc
+
+rootExists :: IO Bool
+rootExists = do
+  root <- getRoot
+  doesPathExist root
+
+-- | Initializes the tsuku root with a statefile if it doesn't exist already.
+initRoot :: IO ()
+initRoot = do
+  root <- getRoot
+  exists <- doesPathExist root
+  create exists root
+ where
+  create :: Bool -> String -> IO ()
+  create True _ = return ()
+  create False path = do
+    createDirectory path
+    writeFile (path ++ "/" ++ kStatefile) "{}"
+
+-- Add stuff for initializing an empty statefile
